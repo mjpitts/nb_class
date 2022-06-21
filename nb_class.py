@@ -1,33 +1,40 @@
 import numpy as np 
-import pandas as pd
 
-
+#This is a multinomial naive bayes classifier
 class NB_classifier:
-    # First goal is to import the data and create a dictionary of frequencies
-    def load(file, encoding):
-        #read file into dataframe 
-        df = pd.read_csv(file, encoding=encoding)
+    
+    def fit(self, x, y):
+        print("Start fitting data...")
+        # Count number of catagories then count instance of each class to get priors.
+        cat_count = y.value_counts()
+        total = len(y)
 
-        # extract x and y component
-        y  = df['v1']
-        x = df['v2']
+        priors = []
+        likelyhoods = {}
+        cat_map = {}
 
-        return x,y
+        # All x will be 200 in length
+        for cat in y:
+            cat_map[cat] = [[1] for i in range(len(x[0]))]
+            if(len(cat_map) == len(y.value_counts())):
+                break
 
-    def fit(x,y):
-        # Count of negative case for spam 
-        ham_count = y.value_counts().ham
-        # Count of positive case for spam 
-        spam_count = y.value_counts().spam
+        for cat in cat_count:
+            priors.append(cat/total)
 
-        # Calculate ham prior
-        ham_prior = ham_count / (ham_count + spam_count)
+        for prior in priors:
+            print(prior)
 
-        # Calculate spam prior
-        spam_prior = spam_count / (ham_count + spam_count)
+        # Calculate likelyhoods 
+        # Likelyhood = P(x1|yi) * P(x2|yi) * … P(xn|yi) 
+        for i, instance in enumerate(x):
+            for i, element in enumerate(instance):
+                cat_map[y[i]][element[i]] += 1
 
-        print(ham_prior)
-        print(spam_prior)
+
+
+    def predict():
+        pass
 
     def evaluate():
         pass
